@@ -16,8 +16,8 @@ const els = {
   slider: document.getElementById('slider'),
   sliderValueLabel: document.getElementById('sliderValueLabel'),
   submitBtn: document.getElementById('submitBtn'),
-  nextBtn: document.getElementById('nextBtn'),
   result: document.getElementById('result'),
+  resultSprite: document.getElementById('resultSprite'),
   resultText: document.getElementById('resultText'),
   yourMarker: document.getElementById('yourMarker'),
   avgMarker: document.getElementById('avgMarker'),
@@ -47,9 +47,8 @@ els.slider.addEventListener('input', () => {
 });
 
 async function loadNext() {
-  els.result.classList.add('hidden');
-  els.submitBtn.disabled = false;
-  els.slider.disabled = false;
+  els.submitBtn.disabled = true;
+  els.slider.disabled = true;
   els.slider.value = 50;
   els.sliderValueLabel.textContent = labelFor(50);
   els.device.classList.add('loading');
@@ -64,11 +63,14 @@ async function loadNext() {
     els.dex.textContent = `#${String(data.id).padStart(4, '0')}`;
   } finally {
     els.device.classList.remove('loading');
+    els.submitBtn.disabled = false;
+    els.slider.disabled = false;
   }
 }
 
 els.submitBtn.addEventListener('click', async () => {
   if (!current) return;
+  const rated = current; // the Pokémon we're rating, before we move on
   const rating = Number(els.slider.value);
   els.submitBtn.disabled = true;
   els.slider.disabled = true;
@@ -76,25 +78,27 @@ els.submitBtn.addEventListener('click', async () => {
   const res = await fetch('/api/rate', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ userId, pokemonId: current.id, rating }),
+    body: JSON.stringify({ userId, pokemonId: rated.id, rating }),
   });
   const data = await res.json();
 
+  // Show how this pick compared, then move straight on to the next one.
+  els.resultSprite.src = rated.sprite;
+  els.resultSprite.alt = rated.name;
   els.yourMarker.style.left = `${rating}%`;
 
   if (data.communityAverage != null && data.communityCount > 1) {
     els.avgMarker.style.left = `${data.communityAverage}%`;
     els.avgMarker.classList.remove('hidden');
-    els.resultText.textContent = `You rated ${capitalize(current.name)} "${labelFor(rating)}." The community average (${data.communityCount} ratings) is ${data.communityAverage.toFixed(1)} / 100.`;
+    els.resultText.textContent = `${capitalize(rated.name)}: you said "${labelFor(rating)}." Community average (${data.communityCount} ratings): ${data.communityAverage.toFixed(1)} / 100.`;
   } else {
     els.avgMarker.classList.add('hidden');
-    els.resultText.textContent = `You rated ${capitalize(current.name)} "${labelFor(rating)}." You're the first one to rate this Pokémon!`;
+    els.resultText.textContent = `${capitalize(rated.name)}: you said "${labelFor(rating)}." You're the first to rate this one!`;
   }
 
   els.result.classList.remove('hidden');
+  loadNext();
 });
-
-els.nextBtn.addEventListener('click', loadNext);
 
 els.leaderboardBtn.addEventListener('click', async () => {
   const res = await fetch('/api/leaderboard');

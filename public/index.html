@@ -37,26 +37,28 @@
           <input type="range" min="0" max="100" value="50" id="slider" class="slider" aria-label="Rating from straight to gay" />
         </div>
 
-        <button id="submitBtn" class="btn btn--primary">Lock in rating</button>
-
-        <div class="result hidden" id="result">
-          <p id="resultText"></p>
-          <div class="spectrum-bar" id="spectrum">
-            <div class="spectrum-bar__marker spectrum-bar__marker--you" id="yourMarker" title="Your rating"></div>
-            <div class="spectrum-bar__marker spectrum-bar__marker--avg hidden" id="avgMarker" title="Community average"></div>
-          </div>
-          <div class="result__legend">
-            <span><i class="dot dot--you"></i>You</span>
-            <span><i class="dot dot--avg"></i>Community</span>
-          </div>
-          <button id="nextBtn" class="btn btn--secondary">Next Pokémon</button>
-        </div>
+        <button id="submitBtn" class="btn btn--primary">Rate!</button>
       </div>
 
       <div class="device__footer">
         <button id="leaderboardBtn" class="link-btn">View the leaderboard</button>
       </div>
     </main>
+
+    <div class="result hidden" id="result">
+      <div class="result__header">
+        <img id="resultSprite" class="result__sprite" src="" alt="" />
+        <p id="resultText"></p>
+      </div>
+      <div class="spectrum-bar" id="spectrum">
+        <div class="spectrum-bar__marker spectrum-bar__marker--you" id="yourMarker" title="Your rating"></div>
+        <div class="spectrum-bar__marker spectrum-bar__marker--avg hidden" id="avgMarker" title="Community average"></div>
+      </div>
+      <div class="result__legend">
+        <span><i class="dot dot--you"></i>You</span>
+        <span><i class="dot dot--avg"></i>Community</span>
+      </div>
+    </div>
 
   </div>
 
