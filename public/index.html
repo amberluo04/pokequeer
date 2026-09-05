@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PokéQueer — where does this one fall?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="page">
+
+    <header class="wordmark">
+      <h1>Poké<span>Queer</span></h1>
+      <p class="tagline">Rate every Pokémon on a spectrum from straight to gay. See what everyone else thinks.</p>
+    </header>
+
+    <main class="device" id="card">
+      <div class="device__vent"></div>
+
+      <div class="screen">
+        <div class="screen__dex" id="dex">#0001</div>
+        <div class="screen__sprite-well">
+          <img id="sprite" class="sprite" src="" alt="" />
+        </div>
+        <div class="screen__name" id="name">&nbsp;</div>
+
+        <div class="spectrum-block">
+          <div class="spectrum-labels">
+            <span>Straight</span>
+            <span id="sliderValueLabel">Bi / Unclear</span>
+            <span>Gay</span>
+          </div>
+          <input type="range" min="0" max="100" value="50" id="slider" class="slider" aria-label="Rating from straight to gay" />
+        </div>
+
+        <button id="submitBtn" class="btn btn--primary">Lock in rating</button>
+
+        <div class="result hidden" id="result">
+          <p id="resultText"></p>
+          <div class="spectrum-bar" id="spectrum">
+            <div class="spectrum-bar__marker spectrum-bar__marker--you" id="yourMarker" title="Your rating"></div>
+            <div class="spectrum-bar__marker spectrum-bar__marker--avg hidden" id="avgMarker" title="Community average"></div>
+          </div>
+          <div class="result__legend">
+            <span><i class="dot dot--you"></i>You</span>
+            <span><i class="dot dot--avg"></i>Community</span>
+          </div>
+          <button id="nextBtn" class="btn btn--secondary">Next Pokémon</button>
+        </div>
+      </div>
+
+      <div class="device__footer">
+        <button id="leaderboardBtn" class="link-btn">View the leaderboard</button>
+      </div>
+    </main>
+
+  </div>
+
+  <div class="leaderboard-panel hidden" id="leaderboardPanel">
+    <div class="leaderboard-panel__inner">
+      <button id="closeLeaderboard" class="close-btn" aria-label="Close leaderboard">&times;</button>
+      <h2>The Community Spectrum</h2>
+      <p class="leaderboard-sub">Ranked by average rating, straight to gay.</p>
+
+      <div class="leaderboard-columns">
+        <section>
+          <h3>Most "gay"</h3>
+          <ol id="gayestList" class="leaderboard-list"></ol>
+        </section>
+        <section>
+          <h3>Most "straight"</h3>
+          <ol id="straightestList" class="leaderboard-list"></ol>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

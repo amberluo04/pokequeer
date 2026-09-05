@@ -1,0 +1,16 @@
+{
+  "name": "pokequeer",
+  "version": "1.0.0",
+  "description": "Rate Pokémon on a spectrum from straight to gay and compare with everyone else's ratings.",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
