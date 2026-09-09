@@ -20,6 +20,29 @@ app.use(express.static(path.join(__dirname, 'public')));
 let pokemonList = []; // [{ id, name }]
 let db = { ratings: {} }; // ratings["<id>"] = [{ userId, rating }]
 
+// Official "Baby Pokémon" classification (Bulbapedia), by national dex number.
+const BABY_POKEMON_IDS = new Set([
+  172, // Pichu
+  173, // Cleffa
+  174, // Igglybuff
+  175, // Togepi
+  236, // Tyrogue
+  238, // Smoochum
+  239, // Elekid
+  240, // Magby
+  298, // Azurill
+  360, // Wynaut
+  406, // Budew
+  433, // Chingling
+  438, // Bonsly
+  439, // Mime Jr.
+  440, // Happiny
+  446, // Munchlax
+  447, // Riolu
+  458, // Mantyke
+  848, // Toxel
+]);
+
 function loadDb() {
   try {
     db = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
@@ -85,8 +108,10 @@ function getStats(pokemonIdKey) {
 
 // Pick the next Pokémon for this user to rate: prefer ones they haven't rated yet.
 app.get('/api/next', (req, res) => {
-  const { userId } = req.query;
+  const { userId, skipBabies } = req.query;
   if (!userId) return res.status(400).json({ error: 'userId is required' });
+
+  const wantsSkipBabies = skipBabies === 'true' || skipBabies === '1';
 
   const ratedIds = new Set(
     Object.entries(db.ratings)
@@ -94,16 +119,22 @@ app.get('/api/next', (req, res) => {
       .map(([pid]) => parseInt(pid, 10))
   );
 
-  const unrated = pokemonList.filter((p) => !ratedIds.has(p.id));
-  const pool = unrated.length > 0 ? unrated : pokemonList;
-  const pick = pool[Math.floor(Math.random() * pool.length)];
+  const eligible = wantsSkipBabies
+    ? pokemonList.filter((p) => !BABY_POKEMON_IDS.has(p.id))
+    : pokemonList;
+
+  const unrated = eligible.filter((p) => !ratedIds.has(p.id));
+  const pool = unrated.length > 0 ? unrated : eligible;
+  // Ordered by Pokédex number (which is also generation order), not random.
+  const pick = pool.reduce((lowest, p) => (p.id < lowest.id ? p : lowest), pool[0]);
 
   res.json({
     id: pick.id,
     name: pick.name,
     sprite: spriteUrl(pick.id),
+    isBaby: BABY_POKEMON_IDS.has(pick.id),
     allRated: unrated.length === 0,
-    totalPokemon: pokemonList.length,
+    totalPokemon: eligible.length,
   });
 });
 

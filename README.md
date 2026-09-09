@@ -35,6 +35,15 @@ That's it — no database to set up, no API keys.
   to a bundled list of the original 151 Pokémon (`pokemon-gen1.json`) so the
   app still works. Sprites are loaded directly from PokeAPI's public sprite
   repository on GitHub, so no API key is ever needed.
+- **Order**: Pokémon are shown in ascending Pokédex number (so generation by
+  generation), not randomly.
+- **Back button**: lets you revisit and change your rating for anything you've
+  rated so far *this session*. It's client-side history, so it resets if you
+  reload the page — going back further than that isn't supported.
+- **Skip baby Pokémon**: a toggle (saved in your browser) that excludes the
+  official "Baby Pokémon" (Pichu, Cleffa, Togepi, Riolu, etc. — 19 total) from
+  the rotation. Toggling it only affects Pokémon fetched from that point on,
+  not ones already in your session history.
 
 ## Hosting it on Render (so anyone can use it)
 

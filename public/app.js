@@ -15,7 +15,9 @@ const els = {
   dex: document.getElementById('dex'),
   slider: document.getElementById('slider'),
   sliderValueLabel: document.getElementById('sliderValueLabel'),
+  backBtn: document.getElementById('backBtn'),
   submitBtn: document.getElementById('submitBtn'),
+  skipBabiesToggle: document.getElementById('skipBabiesToggle'),
   result: document.getElementById('result'),
   resultSprite: document.getElementById('resultSprite'),
   resultText: document.getElementById('resultText'),
@@ -28,7 +30,11 @@ const els = {
   closeLeaderboard: document.getElementById('closeLeaderboard'),
 };
 
-let current = null;
+// This session's Pokémon so far. Each entry: { id, name, sprite, rating }
+// `rating` is null until the user submits one for it (used to restore the
+// slider when they hit Back).
+let history = [];
+let historyIndex = -1;
 
 function labelFor(v) {
   if (v < 15) return 'Very Straight';
@@ -42,25 +48,47 @@ function capitalize(s) {
   return s.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 }
 
+// ---- Skip baby Pokémon toggle (persisted) ----
+els.skipBabiesToggle.checked = localStorage.getItem('pq_skipBabies') === 'true';
+els.skipBabiesToggle.addEventListener('change', () => {
+  localStorage.setItem('pq_skipBabies', els.skipBabiesToggle.checked ? 'true' : 'false');
+  // Only affects Pokémon fetched from here on, not ones already in history.
+});
+
 els.slider.addEventListener('input', () => {
   els.sliderValueLabel.textContent = labelFor(Number(els.slider.value));
 });
 
-async function loadNext() {
+// Render whichever history entry is at `historyIndex` into the main card.
+function showEntry(index) {
+  const entry = history[index];
+  if (!entry) return;
+  historyIndex = index;
+
+  els.sprite.src = entry.sprite;
+  els.sprite.alt = entry.name;
+  els.name.textContent = capitalize(entry.name);
+  els.dex.textContent = `#${String(entry.id).padStart(4, '0')}`;
+
+  const startAt = entry.rating != null ? entry.rating : 50;
+  els.slider.value = startAt;
+  els.sliderValueLabel.textContent = labelFor(startAt);
+
+  els.backBtn.disabled = historyIndex === 0;
+}
+
+// Fetch a brand-new Pokémon from the server and add it to history.
+async function fetchNext() {
   els.submitBtn.disabled = true;
   els.slider.disabled = true;
-  els.slider.value = 50;
-  els.sliderValueLabel.textContent = labelFor(50);
   els.device.classList.add('loading');
 
   try {
-    const res = await fetch(`/api/next?userId=${encodeURIComponent(userId)}`);
+    const skipBabies = els.skipBabiesToggle.checked ? 'true' : 'false';
+    const res = await fetch(`/api/next?userId=${encodeURIComponent(userId)}&skipBabies=${skipBabies}`);
     const data = await res.json();
-    current = data;
-    els.sprite.src = data.sprite;
-    els.sprite.alt = data.name;
-    els.name.textContent = capitalize(data.name);
-    els.dex.textContent = `#${String(data.id).padStart(4, '0')}`;
+    history.push({ id: data.id, name: data.name, sprite: data.sprite, rating: null });
+    showEntry(history.length - 1);
   } finally {
     els.device.classList.remove('loading');
     els.submitBtn.disabled = false;
@@ -68,12 +96,19 @@ async function loadNext() {
   }
 }
 
+els.backBtn.addEventListener('click', () => {
+  if (historyIndex > 0) {
+    showEntry(historyIndex - 1);
+  }
+});
+
 els.submitBtn.addEventListener('click', async () => {
-  if (!current) return;
-  const rated = current; // the Pokémon we're rating, before we move on
+  const rated = history[historyIndex];
+  if (!rated) return;
   const rating = Number(els.slider.value);
   els.submitBtn.disabled = true;
   els.slider.disabled = true;
+  els.backBtn.disabled = true;
 
   const res = await fetch('/api/rate', {
     method: 'POST',
@@ -81,8 +116,9 @@ els.submitBtn.addEventListener('click', async () => {
     body: JSON.stringify({ userId, pokemonId: rated.id, rating }),
   });
   const data = await res.json();
+  rated.rating = rating; // remember it, so Back restores this value later
 
-  // Show how this pick compared, then move straight on to the next one.
+  // Show how this pick compared, then move on.
   els.resultSprite.src = rated.sprite;
   els.resultSprite.alt = rated.name;
   els.yourMarker.style.left = `${rating}%`;
@@ -95,9 +131,19 @@ els.submitBtn.addEventListener('click', async () => {
     els.avgMarker.classList.add('hidden');
     els.resultText.textContent = `${capitalize(rated.name)}: you said "${labelFor(rating)}." You're the first to rate this one!`;
   }
-
   els.result.classList.remove('hidden');
-  loadNext();
+
+  if (historyIndex < history.length - 1) {
+    // We'd gone Back and just re-rated an earlier one — move forward to the
+    // Pokémon we were already on, no need to fetch anything new.
+    showEntry(historyIndex + 1);
+    els.submitBtn.disabled = false;
+    els.slider.disabled = false;
+    els.backBtn.disabled = historyIndex === 0;
+  } else {
+    // We're at the front of history — fetch a genuinely new one.
+    await fetchNext();
+  }
 });
 
 els.leaderboardBtn.addEventListener('click', async () => {
@@ -137,4 +183,4 @@ function renderLeaderboard(listEl, items) {
   });
 }
 
-loadNext();
+fetchNext();

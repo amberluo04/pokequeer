@@ -175,7 +175,6 @@ body {
 }
 
 .btn {
-  width: 100%;
   border: none;
   border-radius: 999px;
   padding: 14px 20px;
@@ -183,12 +182,11 @@ body {
   font-weight: 600;
   font-size: 0.95rem;
   cursor: pointer;
-  margin-top: 22px;
   transition: transform 0.08s ease, opacity 0.15s ease;
 }
 
 .btn:active { transform: scale(0.98); }
-.btn:disabled { opacity: 0.5; cursor: default; }
+.btn:disabled { opacity: 0.4; cursor: default; }
 
 .btn--primary {
   background: var(--ink);
@@ -199,6 +197,22 @@ body {
   background: transparent;
   color: var(--ink);
   border: 2px solid var(--ink);
+}
+
+.btn-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.btn-row .btn--secondary {
+  flex: 0 0 auto;
+  padding-left: 18px;
+  padding-right: 18px;
+}
+
+.btn-row .btn--primary {
+  flex: 1;
 }
 
 .result {
@@ -269,9 +283,31 @@ body {
 .dot--avg { background: var(--avg); }
 
 .device__footer {
-  text-align: center;
-  padding-top: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding-top: 16px;
 }
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #B7BAD6;
+  font-size: 0.82rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.toggle input {
+  width: 16px;
+  height: 16px;
+  accent-color: #8E5DB0;
+  cursor: pointer;
+}
+
+.toggle:hover { color: #F5F1E6; }
 
 .link-btn {
   background: none;

@@ -37,10 +37,17 @@
           <input type="range" min="0" max="100" value="50" id="slider" class="slider" aria-label="Rating from straight to gay" />
         </div>
 
-        <button id="submitBtn" class="btn btn--primary">Rate!</button>
+        <div class="btn-row">
+          <button id="backBtn" class="btn btn--secondary" disabled>Back</button>
+          <button id="submitBtn" class="btn btn--primary">Rate!</button>
+        </div>
       </div>
 
       <div class="device__footer">
+        <label class="toggle">
+          <input type="checkbox" id="skipBabiesToggle" />
+          <span>Skip baby Pokémon</span>
+        </label>
         <button id="leaderboardBtn" class="link-btn">View the leaderboard</button>
       </div>
     </main>
