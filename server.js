@@ -41,6 +41,38 @@ const BABY_POKEMON_IDS = new Set([
   447, // Riolu
   458, // Mantyke
   848, // Toxel
+
+  // Not officially "baby" Pokémon, but read as cute/child-coded by design.
+  133, // Eevee
+  285, // Shroomish
+  293, // Whismur
+  300, // Skitty
+  311, // Plusle
+  312, // Minun
+  420, // Cherubi
+  427, // Buneary
+  587, // Emolga
+  702, // Dedenne
+  742, // Cutiefly
+  755, // Morelull
+  761, // Bounsweet
+  819, // Skwovet
+  821, // Rookidee
+  829, // Gossifleur
+  831, // Wooloo
+  835, // Yamper
+  840, // Applin
+
+  // First-stage starters, every generation (Gen 1 through Gen 9).
+  1, 4, 7,       // Bulbasaur, Charmander, Squirtle
+  152, 155, 158, // Chikorita, Cyndaquil, Totodile
+  252, 255, 258, // Treecko, Torchic, Mudkip
+  387, 390, 393, // Turtwig, Chimchar, Piplup
+  495, 498, 501, // Snivy, Tepig, Oshawott
+  650, 653, 656, // Chespin, Fennekin, Froakie
+  722, 725, 728, // Rowlet, Litten, Popplio
+  810, 813, 816, // Grookey, Scorbunny, Sobble
+  906, 909, 912, // Sprigatito, Fuecoco, Quaxly
 ]);
 
 function loadDb() {

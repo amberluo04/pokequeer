@@ -40,10 +40,16 @@ That's it — no database to set up, no API keys.
 - **Back button**: lets you revisit and change your rating for anything you've
   rated so far *this session*. It's client-side history, so it resets if you
   reload the page — going back further than that isn't supported.
-- **Skip baby Pokémon**: a toggle (saved in your browser) that excludes the
-  official "Baby Pokémon" (Pichu, Cleffa, Togepi, Riolu, etc. — 19 total) from
-  the rotation. Toggling it only affects Pokémon fetched from that point on,
-  not ones already in your session history.
+- **Skip baby Pokémon**: a toggle (saved in your browser) that excludes a
+  curated set of "child-coded" Pokémon from the rotation — the 19 official
+  Baby Pokémon (Pichu, Cleffa, Togepi, Riolu, etc.), a further ~19 Pokémon
+  that read as cute/childlike by design (Eevee, Skitty, Emolga, Dedenne,
+  Applin, Wooloo...), and every generation's first-stage starter (Bulbasaur/
+  Charmander/Squirtle through Sprigatito/Fuecoco/Quaxly) — 65 Pokémon total.
+  This list is a judgment call, not an official classification; the full set
+  is in `BABY_POKEMON_IDS` near the top of `server.js` if you want to add,
+  remove, or trim it. Toggling it only affects Pokémon fetched from that
+  point on, not ones already in your session history.
 
 ## Hosting it on Render (so anyone can use it)
 
