@@ -20,6 +20,10 @@ That's it — no database to set up, no API keys.
 ## How it works
 
 - **Frontend**: plain HTML/CSS/JS in `public/`, styled as a little handheld device.
+- **Logo**: `public/logo.svg` — a Poké Ball with the spectrum gradient in
+  place of the usual red half. Used as both the header logo and the
+  browser favicon. It's a single hand-written SVG, so feel free to tweak
+  colors or shape directly in that file.
 - **Backend**: a small Express server (`server.js`) with three jobs:
   1. Hand out a Pokémon you haven't rated yet (`GET /api/next`)
   2. Save your rating and return the community average (`POST /api/rate`)

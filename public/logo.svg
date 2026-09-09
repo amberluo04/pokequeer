@@ -1,0 +1,22 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="spectrum" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#3A7CA5"/>
+      <stop offset="50%" stop-color="#8E5DB0"/>
+      <stop offset="100%" stop-color="#E4572E"/>
+    </linearGradient>
+  </defs>
+
+  <!-- outer shell -->
+  <circle cx="32" cy="32" r="29" fill="#F5F1E6" stroke="#22223B" stroke-width="3"/>
+
+  <!-- top half: spectrum gradient instead of the usual red -->
+  <path d="M 3.5 32 A 28.5 28.5 0 0 1 60.5 32 Z" fill="url(#spectrum)"/>
+
+  <!-- center band -->
+  <rect x="3" y="29" width="58" height="6" fill="#22223B"/>
+
+  <!-- center button -->
+  <circle cx="32" cy="32" r="9.5" fill="#F5F1E6" stroke="#22223B" stroke-width="3"/>
+  <circle cx="32" cy="32" r="4" fill="#22223B"/>
+</svg>
